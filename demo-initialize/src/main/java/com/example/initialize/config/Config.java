@@ -1,6 +1,7 @@
 package com.example.initialize.config;
 
 import com.example.configuration.config.Company;
+import com.example.configuration.config.CompanyProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +19,9 @@ public class Config {
      */
     @Bean
     @ConditionalOnBean
-    public Company company() { // 왜 안되냐....ㅋㅋㅋ
+    public Company company(CompanyProperties companyProperties) { // 왜 안되냐....ㅋㅋㅋ
+        System.out.println("name : " + companyProperties.getName());
+
         System.out.println("override bean test");
         return new Company("my company");
     }

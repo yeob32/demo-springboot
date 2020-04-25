@@ -1,7 +1,7 @@
 package com.example.initialize;
 
 import com.example.configuration.config.Company;
-import com.example.initialize.config.CompanyProperties;
+import com.example.configuration.config.CompanyProperties;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
