@@ -1,32 +1,78 @@
-plugins {
-    id 'org.springframework.boot' version '2.2.5.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'java'
-}
-
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+buildscript {
+    ext {
+        springBootVersion = '2.2.4.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE"
     }
 }
 
-repositories {
-    mavenCentral()
-}
+allprojects {
+    group 'com.example'
+    version '0.0.1-SNAPSHOT'
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    repositories {
+        mavenCentral()
     }
 }
 
-test {
-    useJUnitPlatform()
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+
+    // 서브 모듈에 공통으로 의존성을 추가 시킬 디펜던시를 정의합니다.
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+//        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//        testCompile group: 'junit', name: 'junit', version: '4.12'
+
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+
+    // 해당 task로 서브 모듈 추가시 기초적인 디렉토리를 자동으로 생성해줍니다.
+    task initSourceFolders {
+        sourceSets*.java.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+
+        sourceSets*.resources.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+    }
 }
+
+project(':demo-initialize') {
+    dependencies {
+//        compile project(':core')
+        compile project(':demo-configuration')
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    }
+}
+
+project(':demo-configuration') {
+    jar {
+        enabled = true // 컴파일 시 의존관계 설정이 제대로 동작 안할때가 있다....
+    }
+
+    dependencies {
+    }
+}
+

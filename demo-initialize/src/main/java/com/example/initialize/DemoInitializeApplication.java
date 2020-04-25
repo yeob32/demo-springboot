@@ -1,10 +1,13 @@
-package com.example.demo;
+package com.example.initialize;
 
+import com.example.configuration.config.Company;
+import com.example.initialize.config.CompanyProperties;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -16,8 +19,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@EnableConfigurationProperties(CompanyProperties.class)
 @SpringBootApplication
-public class DemoApplication {
+public class DemoInitializeApplication {
 
     /**
      * 스프링 부트 초기화 방법
@@ -29,9 +33,12 @@ public class DemoApplication {
      */
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext cac = SpringApplication.run(DemoApplication.class, args);
+        ConfigurableApplicationContext cac = SpringApplication.run(DemoInitializeApplication.class, args);
         cac.addApplicationListener((ApplicationListener<MyEvent>) myEvent -> System.out.println("myEvent : " + myEvent.getMessage()));
         cac.publishEvent(new MyEvent(cac, "Hello SpringBoot Event !!!"));
+
+        Company company = cac.getBean("company", Company.class);
+        System.out.println(company);
     }
 
     @EventListener(ApplicationReadyEvent.class)
