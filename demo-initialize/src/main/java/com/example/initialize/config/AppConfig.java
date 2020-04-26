@@ -1,6 +1,7 @@
 package com.example.initialize.config;
 
 import com.example.configuration.config.Company;
+import com.example.configuration.config.CompanyConfiguration;
 import com.example.configuration.config.CompanyProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class Config {
+public class AppConfig {
 
     /**
      * 스프링부트 2.1
@@ -18,7 +19,7 @@ public class Config {
      * @return
      */
     @Bean
-    @ConditionalOnBean
+    @ConditionalOnBean(CompanyConfiguration.class) // 빈 등록 순서가 autoConfiguration 보다 빠르기 때문에 초기화 빈 없다요?
     public Company company(CompanyProperties companyProperties) { // 왜 안되냐....ㅋㅋㅋ
         System.out.println("name : " + companyProperties.getName());
 
@@ -29,7 +30,21 @@ public class Config {
     @Bean
     @ConditionalOnMissingBean
     public String test() {
-        System.out.println("regist bean test");
+        System.out.println("regist bean test1");
+        return "test!!";
+    }
+
+    @Bean
+    @ConditionalOnBean(name = "test")
+    public String test2() {
+        System.out.println("regist bean test2");
+        return "test!!";
+    }
+
+    @Bean
+    @ConditionalOnBean(AppConfig.class)
+    public String test3() {
+        System.out.println("regist bean test3");
         return "test!!";
     }
 }
