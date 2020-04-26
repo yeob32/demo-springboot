@@ -2,6 +2,7 @@ package com.example.initialize;
 
 import com.example.configuration.config.Company;
 import com.example.configuration.config.CompanyProperties;
+import com.example.configuration.config.Employee;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -39,6 +40,9 @@ public class DemoInitializeApplication {
 
         Company company = cac.getBean("company", Company.class);
         System.out.println(company);
+
+        Employee employee = cac.getBean("employee", Employee.class);
+        System.out.println(employee);
     }
 
     @EventListener(ApplicationReadyEvent.class)
