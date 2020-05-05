@@ -65,11 +65,15 @@ project(':demo-initialize') {
         implementation 'org.springframework.boot:spring-boot-starter-web'
 
     }
+
+    test { // 이거 안해주면 에러남 .. -> gradle, JUnit5 사용 시
+        useJUnitPlatform()
+    }
 }
 
 project(':demo-configuration') {
     jar {
-        enabled = true // 컴파일 시 의존관계 설정이 제대로 동작 안할때가 있다....
+        enabled = true // 컴파일 시 의존관계 설정이 제대로 동작 하지 않을 때가 있다....
     }
 
     dependencies {
